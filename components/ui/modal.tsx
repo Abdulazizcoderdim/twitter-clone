@@ -1,10 +1,5 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { title } from 'process';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { X } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -22,16 +17,27 @@ export default function Modal({
   onClose,
   body,
   footer,
-  isStep,
   step,
   totalSteps,
 }: ModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-black">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="bg-black p-1">
+        <div className="flex items-center gap-6">
+          <button
+            onClick={onClose}
+            type="button"
+            title="close"
+            className="p-1 border-0 text-white hover:opacity-70 transition w-fit"
+          >
+            <X size={28} />
+          </button>
+          {step && totalSteps && (
+            <div className="text-xl font-bold">
+              Step {step} of {totalSteps}
+            </div>
+          )}
+        </div>
         <div className="mt-4">{body}</div>
         {footer && <div className="mt-4">{footer}</div>}
       </DialogContent>
