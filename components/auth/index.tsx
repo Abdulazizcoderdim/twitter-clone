@@ -3,6 +3,7 @@ import { AiFillGithub } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 import Button from '../ui/button';
 
+
 export default function Auth() {
   return (
     <>
@@ -62,6 +63,7 @@ export default function Auth() {
               Already have an account?
             </h3>
             <Button label={'Sign in'} fullWidth outline />
+            
           </div>
         </div>
       </div>
