@@ -39,7 +39,7 @@ export default function Modal({
           )}
         </div>
         <div className="mt-4">{body}</div>
-        {footer && <div className="mt-4">{footer}</div>}
+        {footer && <div>{footer}</div>}
       </DialogContent>
     </Dialog>
   );
