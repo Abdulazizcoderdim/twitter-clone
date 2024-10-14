@@ -1,7 +1,8 @@
+import useLoginModal from '@/hooks/useLoginModal';
 import useRegisterModal from '@/hooks/useRegisterModal';
 import { registerStep1Schema, registerStep2Schema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import Button from '../ui/button';
@@ -20,6 +21,12 @@ export default function RegisterModal() {
   const [data, setData] = useState({ name: '', email: '' });
 
   const registerModal = useRegisterModal();
+  const loginModal = useLoginModal();
+
+  const onToggle = useCallback(() => {
+    loginModal.onOpen();
+    registerModal.onClose();
+  }, [loginModal, registerModal]);
 
   const bodyContent =
     step === 1 ? (
@@ -32,7 +39,10 @@ export default function RegisterModal() {
     <div className="text-neutral-400 text-center mb-4">
       <p>
         Already have an account?{' '}
-        <span className="text-white cursor-pointer hover:underline">
+        <span
+          onClick={onToggle}
+          className="text-white cursor-pointer hover:underline"
+        >
           Sign in
         </span>
       </p>

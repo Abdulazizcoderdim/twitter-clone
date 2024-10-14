@@ -1,22 +1,31 @@
 'use client';
 
+import useLoginModal from '@/hooks/useLoginModal';
 import useRegisterModal from '@/hooks/useRegisterModal';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { AiFillGithub } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
+import LoginModal from '../modals/login-modal';
 import RegisterModal from '../modals/register-modal';
 import Button from '../ui/button';
 
 export default function Auth() {
   const registerModal = useRegisterModal();
+  const loginModal = useLoginModal();
 
   const onOpneRegisterModal = useCallback(() => {
     registerModal.onOpen();
   }, [registerModal]);
+
+  const onOpneLoginModal = useCallback(() => {
+    loginModal.onOpen();
+  }, [loginModal]);
+
   return (
     <>
       <RegisterModal />
+      <LoginModal />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center h-screen">
         <Image
           src={'/images/x.svg'}
@@ -76,7 +85,12 @@ export default function Auth() {
             <h3 className="font-medium text-xl mb-4">
               Already have an account?
             </h3>
-            <Button label={'Sign in'} fullWidth outline />
+            <Button
+              onClick={onOpneLoginModal}
+              label={'Sign in'}
+              fullWidth
+              outline
+            />
           </div>
         </div>
       </div>
