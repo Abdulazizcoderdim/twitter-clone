@@ -2,9 +2,12 @@ import useLoginModal from '@/hooks/useLoginModal';
 import useRegisterModal from '@/hooks/useRegisterModal';
 import { loginSchema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback } from 'react';
+import axios from 'axios';
+import { AlertCircle } from 'lucide-react';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import Button from '../ui/button';
 import {
   Form,
@@ -17,6 +20,8 @@ import { Input } from '../ui/input';
 import Modal from '../ui/modal';
 
 export default function LoginModal() {
+  const [error, setError] = useState('');
+
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
 
@@ -33,8 +38,20 @@ export default function LoginModal() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    try {
+      const { data } = await axios.post('/api/auth/login', values);
+      if (data.success) {
+        loginModal.onClose();
+      }
+      console.log(data);
+    } catch (error: Error | any) {
+      if (error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Something went wrong, please try again later');
+      }
+    }
   }
 
   const { isSubmitting } = form.formState;
@@ -42,6 +59,13 @@ export default function LoginModal() {
   const bodyContent = (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-12">
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}.</AlertDescription>
+          </Alert>
+        )}
         <FormField
           control={form.control}
           name="email"
@@ -69,7 +93,7 @@ export default function LoginModal() {
           )}
         />
         <Button
-          label={'Register'}
+          label={'Login'}
           type="submit"
           secondary
           fullWidth
