@@ -1,8 +1,10 @@
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import useLoginModal from '@/hooks/useLoginModal';
 import useRegisterModal from '@/hooks/useRegisterModal';
 import { registerStep1Schema, registerStep2Schema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
+import { AlertCircle } from 'lucide-react';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -70,6 +72,8 @@ function RegisterStep1({
   setStep: Dispatch<SetStateAction<number>>;
   setData: Dispatch<SetStateAction<{ name: string; email: string }>>;
 }) {
+  const [error, setError] = useState<string>();
+
   const form = useForm<z.infer<typeof registerStep1Schema>>({
     resolver: zodResolver(registerStep1Schema),
     defaultValues: {
@@ -86,7 +90,11 @@ function RegisterStep1({
         setStep(2);
       }
     } catch (error: Error | any) {
-      console.log(error.response.data.message);
+      if (error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Something went wrong, please try again later');
+      }
     }
   }
 
@@ -96,6 +104,13 @@ function RegisterStep1({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-12">
         <h3 className="text-3xl font-semibold text-white">Create an account</h3>
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}.</AlertDescription>
+          </Alert>
+        )}
         <FormField
           control={form.control}
           name="name"
@@ -136,6 +151,7 @@ function RegisterStep1({
 }
 
 function RegisterStep2({ data }: { data: { name: string; email: string } }) {
+  const [error, setError] = useState<string>();
   const registerModal = useRegisterModal();
   const form = useForm<z.infer<typeof registerStep2Schema>>({
     resolver: zodResolver(registerStep2Schema),
@@ -156,7 +172,11 @@ function RegisterStep2({ data }: { data: { name: string; email: string } }) {
         console.log(response);
       }
     } catch (error: Error | any) {
-      console.log(error.response.data.message);
+      if (error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Something went wrong, please try again later');
+      }
     }
   }
 
@@ -164,6 +184,13 @@ function RegisterStep2({ data }: { data: { name: string; email: string } }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-12">
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}.</AlertDescription>
+          </Alert>
+        )}
         <FormField
           control={form.control}
           name="username"
