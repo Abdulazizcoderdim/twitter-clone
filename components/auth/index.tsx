@@ -9,6 +9,7 @@ import { FcGoogle } from 'react-icons/fc';
 import LoginModal from '../modals/login-modal';
 import RegisterModal from '../modals/register-modal';
 import Button from '../ui/button';
+import { signIn } from 'next-auth/react';
 
 export default function Auth() {
   const registerModal = useRegisterModal();
@@ -55,7 +56,10 @@ export default function Auth() {
               />
               <Button
                 label={
-                  <div className="flex gap-2 items-center justify-center">
+                  <div
+                    onClick={() => signIn('github')}
+                    className="flex gap-2 items-center justify-center"
+                  >
                     <AiFillGithub />
                     Sign up with Github
                   </div>
